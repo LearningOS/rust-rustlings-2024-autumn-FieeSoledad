@@ -3,8 +3,8 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
-use std::cmp::Ordering;
+
+//use std::cmp::Ordering;
 use std::fmt::Debug;
 
 
@@ -50,13 +50,74 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        //TODO
+        //no-ownership because of smart pointer Box
+        // let mut root = &mut self.root;
+        // loop{
+        //     //what's up? a value type can only has one mutable ref?but here?root and node
+        //     match *root{
+        //         //reborrow
+        //         Some(ref mut node)=>{
+        //             //move ownership through ref?
+        //             let mut temp = &mut None;
+        //             if value>node.value{  
+        //                 //move occur? 
+        //                 temp = &mut node.right;
+        //             }else if value<node.value{
+        //                 temp = &mut node.left;
+        //             }else if value<=node.value && value>=node.value{
+        //                 temp = &mut node.right;
+        //             }
+        //             root = temp;
+        //         },
+        //         None=>{
+        //             //reach leaf node
+        //             let node = TreeNode::new(value);
+        //             let ptr = Box::new(node);
+        //             root.insert(ptr);
+        //             break;
+        //         }
+        //     }
+        // }
+        match self.root{
+            Some(ref mut root)=>root.insert(value),
+            None=>self.root =  Some(Box::new(TreeNode::new(value))),
+        }
+        
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
+        // let mut root = &self.root;
+        // loop{
+        //     match *root{
+        //         Some(ref node)=>{
+        //             //ownership problem?
+        //             if value>node.value{
+        //                 root = &(node.right);
+        //             }else if value <node.value{
+        //                 root = &(node.left);
+        //             }else if value<=node.value && value>=node.value{
+        //                 return true;
+        //             }
+        //         },
+        //         None=>{
+        //             return false;
+        //         }
+        //     }
+        // }
+        //panic!("error");
+        let mut cur =  &self.root;
+        while let Some(ref node) = cur{
+            if value==node.value{
+                return true;
+            }else if value<node.value{
+                cur = &node.left;
+            }else{
+                cur = &node.right;
+            }
+        }
+        return false;
     }
 }
 
@@ -67,6 +128,17 @@ where
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
+        if value<self.value{
+            match self.left{
+                Some(ref mut left_node)=>left_node.insert(value),
+                None=>self.left = Some(Box::new(TreeNode::new(value))),
+            }
+        }else if value>self.value{
+            match self.right{
+                Some(ref mut right_node)=>right_node.insert(value),
+                None=>self.right = Some(Box::new(TreeNode::new(value))),
+            }
+        }
     }
 }
 

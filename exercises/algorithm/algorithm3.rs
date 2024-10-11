@@ -3,10 +3,29 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
+use std::cmp::PartialOrd;
+
+fn sort<T>(array: &mut [T])
+where 
+    T: PartialOrd+Clone,
+{
 	//TODO
+    //Bubble Sort
+    let arr =  [1,2,3];
+    let r1 = &arr;
+    let v = r1[0];
+    let mut len = array.len()-1;
+    while len>=1{
+        for idx in 0..len{
+            if array[idx]>array[idx+1]{
+                let temp = array[idx].clone();
+                array[idx] = array[idx+1].clone();
+                array[idx+1] = temp;
+            }
+        }
+        len-=1;
+    }
 }
 #[cfg(test)]
 mod tests {

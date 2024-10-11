@@ -3,7 +3,9 @@
 	This question requires you to use a stack to achieve a bracket match
 */
 
-// I AM NOT DONE
+use std::collections::HashMap;
+
+
 #[derive(Debug)]
 struct Stack<T> {
 	size: usize,
@@ -32,7 +34,9 @@ impl<T> Stack<T> {
 	}
 	fn pop(&mut self) -> Option<T> {
 		// TODO
-		None
+		let element = self.data.pop();
+		self.size-=1;
+		element
 	}
 	fn peek(&self) -> Option<&T> {
 		if 0 == self.size {
@@ -73,7 +77,8 @@ impl<T: Clone> Iterator for IntoIter<T> {
 	type Item = T;
 	fn next(&mut self) -> Option<Self::Item> {
 		if !self.0.is_empty() {
-			self.0.size -= 1;self.0.data.pop()
+			self.0.size -= 1;
+			self.0.data.pop()
 		} 
 		else {
 			None
@@ -102,7 +107,54 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 fn bracket_match(bracket: &str) -> bool
 {
 	//TODO
-	true
+	let mut chs = bracket.chars();
+	//let a = chs.next();
+	//why generic should be defined like this
+	let mut stack = Stack::<char>::new();
+
+	let mut mapper:HashMap<char,char> =  HashMap::new();
+	mapper.insert(')','(');
+	mapper.insert('}','{');
+	mapper.insert(']','[');
+	
+	while let Some(ch) = chs.next(){
+		if ch == '(' || ch=='[' || ch=='{'{
+			stack.push(ch);
+			continue;
+		}else{
+			if ch==')'{
+				if !stack.is_empty() && *(stack.peek().unwrap()) == '('{
+					stack.pop();
+					continue;
+				}else{
+					return false;
+				}
+			}
+			
+			if ch==']'{
+				if !stack.is_empty() && *(stack.peek().unwrap())=='['{
+					stack.pop();
+					continue;
+				}else{
+					return false;
+				}
+			}
+			
+			if ch=='}'{
+				if !stack.is_empty() && *(stack.peek().unwrap())=='{'{
+					stack.pop();
+					continue;
+				}else {
+					return false;
+				}
+			}
+		}
+	}
+	if stack.len()!=0{
+		return false;
+	}else{
+		return true;	
+	}
 }
 
 #[cfg(test)]

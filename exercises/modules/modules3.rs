@@ -8,10 +8,15 @@
 // Execute `rustlings hint modules3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 // TODO: Complete this use statement
-use ???
+// You can use the `use` keyword to bring module paths from modules from
+// anywhere and especially from the standard library into your scope.
+
+// TODO: Bring `SystemTime` and `UNIX_EPOCH` from the `std::time` module into
+// your scope. Bonus style points if you can do it with one line!
+// use ???;
+use std::time::{SystemTime,UNIX_EPOCH};
 
 fn main() {
     match SystemTime::now().duration_since(UNIX_EPOCH) {

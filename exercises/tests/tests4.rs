@@ -1,25 +1,25 @@
 // tests4.rs
 //
-// Make sure that we're testing for the correct conditions!
-//
-// Execute `rustlings hint tests4` or use the `hint` watch subcommand for a
-// hint.
-
-// I AM NOT DONE
-
 struct Rectangle {
     width: i32,
-    height: i32
+    height: i32,
 }
 
 impl Rectangle {
-    // Only change the test functions themselves
-    pub fn new(width: i32, height: i32) -> Self {
+    // Don't change this function.
+    fn new(width: i32, height: i32) -> Self {
         if width <= 0 || height <= 0 {
-            panic!("Rectangle width and height cannot be negative!")
+            // Returning a `Result` would be better here. But we want to learn
+            // how to test functions that can panic.
+            panic!("Rectangle width and height must be positive");
         }
-        Rectangle {width, height}
+
+        Rectangle { width, height }
     }
+}
+
+fn main() {
+    // You can optionally experiment here.
 }
 
 #[cfg(test)]
@@ -28,21 +28,26 @@ mod tests {
 
     #[test]
     fn correct_width_and_height() {
-        // This test should check if the rectangle is the size that we pass into its constructor
+        // TODO: This test should check if the rectangle has the size that we
+        // pass to its constructor.
         let rect = Rectangle::new(10, 20);
-        assert_eq!(???, 10); // check width
-        assert_eq!(???, 20); // check height
+        assert_eq!(rect.width, 10); // Check width
+        assert_eq!(rect.height, 20); // Check height
     }
 
+    // TODO: This test should check if the program panics when we try to create
+    // a rectangle with negative width.
     #[test]
+    #[should_panic(expected="Rectangle width and height must be positive")]
     fn negative_width() {
-        // This test should check if program panics when we try to create rectangle with negative width
         let _rect = Rectangle::new(-10, 10);
     }
 
+    // TODO: This test should check if the program panics when we try to create
+    // a rectangle with negative height.
     #[test]
+    #[should_panic(expected="Rectangle width and height must be positive")]
     fn negative_height() {
-        // This test should check if program panics when we try to create rectangle with negative height
         let _rect = Rectangle::new(10, -10);
     }
 }

@@ -2,11 +2,12 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 use std::vec::*;
+use std::cmp::PartialOrd;
 
 #[derive(Debug)]
 struct Node<T> {
@@ -49,7 +50,7 @@ impl<T> LinkedList<T> {
         node.next = None;
         let node_ptr = Some(unsafe { NonNull::new_unchecked(Box::into_raw(node)) });
         match self.end {
-            None => self.start = node_ptr,
+            None => self.start = node_ptr,  
             Some(end_ptr) => unsafe { (*end_ptr.as_ptr()).next = node_ptr },
         }
         self.end = node_ptr;
@@ -60,6 +61,7 @@ impl<T> LinkedList<T> {
         self.get_ith_node(self.start, index)
     }
 
+    //zhegeyeshitainanleya
     fn get_ith_node(&mut self, node: Option<NonNull<Node<T>>>, index: i32) -> Option<&T> {
         match node {
             None => None,
@@ -69,14 +71,60 @@ impl<T> LinkedList<T> {
             },
         }
     }
+
+
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
+    where
+        T:PartialOrd,
+	{    
+        
 		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+        let len1 = list_a.length;
+        let len2 = list_b.length;
+        if len1==0 && len2==0{
+            return Self{
+                length:0,
+                start:None,
+                end:None,
+            };
         }
+        let mut list_a = list_a.start;
+        let mut list_b = list_b.start;
+        
+        
+        let mut node = None;
+        let mut cur =  &mut node;
+        *cur = loop{
+            match (list_a,list_b){
+                (Some(mut a),Some(mut b))=>{
+                    if unsafe{(*a.as_ptr()).val<(*b.as_ptr()).val}{
+                        list_a = unsafe {(*a.as_ptr()).next.take()};
+                        list_b = Some(b);
+                        cur = unsafe {&mut cur.insert(a).as_mut().next};
+                    }else{
+                        list_b = unsafe{(*b.as_ptr()).next.take()};
+                        list_a = Some(a);
+                        cur = unsafe {&mut cur.insert(b).as_mut().next};
+                    }
+                },
+                (x,y)=> break x.or(y),
+            }
+        };
+        //set end: there is no problem of ownership move;
+        
+        let ans = Self{
+            length:len1+len2,
+            start: node,
+            end:None
+        };
+        
+        // let mut head =&ans.start;
+        
+        // while unsafe{(*(*head).as_ptr()).next!=None}{
+        //     head =  &mut (*head).next;
+        // }
+        // ans.end = *head;
+        ans
 	}
 }
 
@@ -144,7 +192,7 @@ mod tests {
 		}
 		println!("list a {} list b {}", list_a,list_b);
 		let mut list_c = LinkedList::<i32>::merge(list_a,list_b);
-		println!("merged List is {}", list_c);
+		println!("merged List is {}", list_c); 
 		for i in 0..target_vec.len(){
 			assert_eq!(target_vec[i],*list_c.get(i as i32).unwrap());
 		}
