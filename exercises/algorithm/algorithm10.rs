@@ -29,10 +29,6 @@ impl Graph for UndirectedGraph {
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
-        let mut s = String::from("12");
-        let sli = &s[0..1];
-        s.pop();
-        println!("{}",sli);
         if !self.contains(edge.0){
             self.adjacency_table.insert(edge.0.to_string(),vec![]);
         }
@@ -43,7 +39,6 @@ impl Graph for UndirectedGraph {
         }
         let node_1 = self.adjacency_table.get_mut(edge.1).unwrap();
         node_1.push((edge.0.to_string(),edge.2));
-        //
     }
 }
 //
